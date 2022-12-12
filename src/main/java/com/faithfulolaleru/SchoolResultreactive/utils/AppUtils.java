@@ -4,6 +4,7 @@ import com.faithfulolaleru.SchoolResultreactive.dtos.StudentRequest;
 import com.faithfulolaleru.SchoolResultreactive.dtos.StudentResponse;
 import com.faithfulolaleru.SchoolResultreactive.models.Student;
 import com.faithfulolaleru.SchoolResultreactive.repositories.StudentRepository;
+import com.faithfulolaleru.SchoolResultreactive.response.AppResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -25,11 +26,28 @@ public class AppUtils {
         return response;
     }
 
+    public static StudentResponse entityToDto2(Student student) {
+        return StudentResponse.builder()
+                .id(student.getId())
+                .name(student.getName())
+                .studentClass(student.getStudentClass())
+                .createdAt(student.getCreatedAt()).build();
+    }
+
     public static Student dtoToEntity(StudentRequest request) {
         Student student = new Student();
         BeanUtils.copyProperties(request, student);
 
         return student;
+    }
+
+    public static Mono<AppResponse> buildAppResponse(Object data, String message) {   // Object can also be List
+        return Mono.just(AppResponse.builder()
+                .statusCode("200")
+                .httpStatus(HttpStatus.OK)
+                .message(message)
+                .data(data)
+                .build());
     }
 
 

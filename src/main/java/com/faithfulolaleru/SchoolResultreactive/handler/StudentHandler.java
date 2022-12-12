@@ -6,6 +6,7 @@ import com.faithfulolaleru.SchoolResultreactive.exception.ErrorResponse;
 import com.faithfulolaleru.SchoolResultreactive.exception.GeneralException;
 import com.faithfulolaleru.SchoolResultreactive.models.Student;
 import com.faithfulolaleru.SchoolResultreactive.repositories.StudentRepository;
+import com.faithfulolaleru.SchoolResultreactive.response.AppResponse;
 import com.faithfulolaleru.SchoolResultreactive.utils.AppUtils;
 import io.r2dbc.spi.Parameter;
 import lombok.AllArgsConstructor;
@@ -36,27 +37,15 @@ public record StudentHandler(StudentRepository studentRepository) {
     public Mono<ServerResponse> createStudent(ServerRequest request) {
         Mono<StudentRequest> studentRequestMono = request.bodyToMono(StudentRequest.class);
 
-
-        // .doOnNext(result -> )
-        Mono<StudentResponse> responseMono = studentRequestMono
+        Mono<AppResponse> responseMono = studentRequestMono
                 .map(req -> studentRepository.findStudentByName(req.getName())
                         .map(student -> throwErrorIfExist(student))
                         .switchIfEmpty(studentRepository.save(Student.builder()
                                 .name(req.getName())
                                 .studentClass(req.getStudentClass())
                                 .build())))
-                .flatMap(studentMono -> studentMono.map(s -> AppUtils.entityToDto(s)));
-        //.subscribe();
-        // log.info("Subscribe ---> ", subscribe);
-
-
-       /* Mono<Student> entity = studentRequestMono.map(AppUtils::dtoToEntity);
-        Mono<Student> savedStudentMono = studentRepository.findStudentByName(entity.block().getName())
-                .map(student -> throwErrorIfExist(student))
-                .switchIfEmpty(studentRepository.save(Student.builder()
-                        .name(studentRequestMono.block().getName())
-                        .studentClass(studentRequestMono.block().getStudentClass())
-                        .build()));*/
+                .flatMap(studentMono -> studentMono.map(s -> AppUtils.entityToDto2(s)))
+                .flatMap(o -> AppUtils.buildAppResponse(o, "Created Successfully"));
 
         return ServerResponse.ok().body(responseMono, StudentResponse.class);
     }
