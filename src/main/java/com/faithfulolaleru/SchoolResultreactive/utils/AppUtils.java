@@ -50,6 +50,15 @@ public class AppUtils {
                 .build());
     }
 
+    public static Mono<AppResponse> buildAppResponse(String message) {   // Object can also be List
+        return Mono.just(AppResponse.builder()
+                .statusCode("200")
+                .httpStatus(HttpStatus.OK)
+                .message(message)
+                .data(null)
+                .build());
+    }
+
 
 
 
