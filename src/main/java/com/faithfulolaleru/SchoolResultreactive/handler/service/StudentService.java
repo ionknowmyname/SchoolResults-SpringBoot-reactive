@@ -3,7 +3,6 @@ package com.faithfulolaleru.SchoolResultreactive.handler.service;
 import com.faithfulolaleru.SchoolResultreactive.exception.GeneralException;
 import com.faithfulolaleru.SchoolResultreactive.models.Student;
 import com.faithfulolaleru.SchoolResultreactive.repositories.StudentRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;

@@ -16,6 +16,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+
 @Component
 @Slf4j
 public record ScoreHandler(ScoreRepository scoreRepository, StudentService studentService) {
@@ -29,7 +31,11 @@ public record ScoreHandler(ScoreRepository scoreRepository, StudentService stude
                         .flatMap(student -> scoreRepository.findByStudentIdAndTerm(student.getId(), req.getTerm())
                                 .map(score -> throwErrorIfExist(score))
                                 .switchIfEmpty(scoreRepository.save(scoreBuilder(req, studentId)))))
-                .flatMap(scoreMono -> scoreMono.map(s -> AppUtils.entityToDto(s)))
+                .flatMap(scoreMono -> scoreMono.map(s -> {
+                    ScoreResponse sr = AppUtils.entityToDto(s);
+                    sr.setCreatedAt(s.getCreatedAt());   // createdAt still not returning
+                    return sr;
+                }))
                 .flatMap(o -> AppUtils.buildAppResponse(o, "Score Created Successfully"));
 
         return ServerResponse.ok().body(responseMono, ScoreResponse.class);
@@ -82,11 +88,13 @@ public record ScoreHandler(ScoreRepository scoreRepository, StudentService stude
                 .subject4Score(req.getSubject4Score())
                 .subject5Score(req.getSubject5Score())
                 .subject6Score(req.getSubject6Score())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
     private Mono<Score> updateScore(ScoreRequest req, Score score) {
         Score newScore = Score.builder()
+                .id(score.getId())
                 .studentId(score.getStudentId())
                 .term(score.getTerm())
                 .subject1Score((req.getSubject1Score()) != null ? req.getSubject1Score() : score.getSubject1Score())
@@ -95,8 +103,11 @@ public record ScoreHandler(ScoreRepository scoreRepository, StudentService stude
                 .subject4Score((req.getSubject4Score()) != null ? req.getSubject4Score() : score.getSubject4Score())
                 .subject5Score((req.getSubject5Score()) != null ? req.getSubject5Score() : score.getSubject5Score())
                 .subject6Score((req.getSubject6Score()) != null ? req.getSubject6Score() : score.getSubject6Score())
+                .createdAt(score.getCreatedAt())
+                .updatedAt(LocalDateTime.now())
                 .build();
 
         return scoreRepository.save(newScore);
     }
+
 }

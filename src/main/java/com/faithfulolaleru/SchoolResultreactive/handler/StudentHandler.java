@@ -15,6 +15,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+
 @Component
 //@AllArgsConstructor
 @Slf4j
@@ -65,6 +67,7 @@ public record StudentHandler(StudentRepository studentRepository) {
                         .switchIfEmpty(studentRepository.save(Student.builder()
                                 .name(req.getName())
                                 .studentClass(req.getStudentClass())
+                                .createdAt(LocalDateTime.now())
                                 .build())))
                 .flatMap(studentMono -> studentMono.map(s -> AppUtils.entityToDto2(s)))
                 .flatMap(o -> AppUtils.buildAppResponse(o, "User Created Successfully"));  // update to return createdAt

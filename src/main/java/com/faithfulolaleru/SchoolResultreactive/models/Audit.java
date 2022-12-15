@@ -14,6 +14,8 @@ import org.springframework.data.relational.core.mapping.Column;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @MappedSuperclass
 // @EntityListeners(AuditingEntityListener.class)
@@ -21,8 +23,8 @@ import java.time.Instant;
         value = {"createdAt", "updatedAt"},
         allowGetters = true
 )
-@NoArgsConstructor
 @AllArgsConstructor
+// @NoArgsConstructor
 @Data
 public class Audit {
 
@@ -33,15 +35,15 @@ public class Audit {
     @Column("created_at")
 //    @CreationTimestamp
     @CreatedDate
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column("updated_at")
 //    @UpdateTimestamp
     @LastModifiedDate
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
 
-//    public Audit() {
-//        this.createdAt = Instant.now();
-//    }
+    public Audit() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

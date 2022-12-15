@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @NoArgsConstructor
@@ -16,6 +18,6 @@ public class StudentResponse {
     private Integer id;
     private String name;
     private String studentClass;
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
 }

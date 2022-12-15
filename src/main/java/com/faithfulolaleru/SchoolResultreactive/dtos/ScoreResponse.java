@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +22,6 @@ public class ScoreResponse {
     private Integer subject4Score;
     private Integer subject5Score;
     private Integer subject6Score;
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     // private String message;
 }
