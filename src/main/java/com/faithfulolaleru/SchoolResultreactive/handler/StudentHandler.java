@@ -39,6 +39,19 @@ public record StudentHandler(StudentRepository studentRepository) {
                 .body(response, AppResponse.class);
     }
 
+    public Mono<ServerResponse> getAllStudentsByStudentClass(ServerRequest request) {
+
+        String studentClass = request.pathVariable("studentClass");
+
+        Mono<AppResponse> response = studentRepository.findStudentsByStudentClass(studentClass)
+                .map(AppUtils::entityToDto)
+                .collectList()
+                .flatMap(o -> AppUtils.buildAppResponse(o, "Successful"))
+                .switchIfEmpty(Mono.empty());
+
+        return ServerResponse.ok().body(response, AppResponse.class);
+    }
+
     public Mono<ServerResponse> getStudentById(ServerRequest request) {
         Integer id = Integer.valueOf(request.pathVariable("id"));
 
@@ -111,4 +124,5 @@ public record StudentHandler(StudentRepository studentRepository) {
                 .switchIfEmpty(Mono.error(new GeneralException(HttpStatus.NOT_FOUND,
                         "Student with name doesn't exist")));
     }
+
 }

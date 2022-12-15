@@ -21,12 +21,13 @@ public class RouterConfig {
     public RouterFunction<ServerResponse> routerFunction() {
 
         return RouterFunctions.route()
-                .GET("/api/students/", studentHandler::getAllStudents)
+                .GET("/api/students", studentHandler::getAllStudents)
+                .GET("/api/students/{studentClass}", studentHandler::getAllStudentsByStudentClass)
                 .GET("/api/students/{id}", studentHandler::getStudentById)
                 .POST("/api/students/new", studentHandler::createStudent)
                 .POST("/api/scores/{studentId}/new", scoreHandler::createScoreForStudent)
                 .PUT("/api/scores/{studentId}/update", scoreHandler::updateScoreForStudent)
-                .GET("/api/scores/{studentId}/", scoreHandler::getAllScoresByStudentId)
+                .GET("/api/scores/{studentId}", scoreHandler::getAllScoresByStudentId)
                 .build();
     }
 }

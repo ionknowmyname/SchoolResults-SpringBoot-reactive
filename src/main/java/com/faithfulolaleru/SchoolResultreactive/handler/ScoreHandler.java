@@ -33,7 +33,8 @@ public record ScoreHandler(ScoreRepository scoreRepository, StudentService stude
                                 .switchIfEmpty(scoreRepository.save(scoreBuilder(req, studentId)))))
                 .flatMap(scoreMono -> scoreMono.map(s -> {
                     ScoreResponse sr = AppUtils.entityToDto(s);
-                    sr.setCreatedAt(s.getCreatedAt());   // createdAt still not returning
+                    sr.setCreatedAt(s.getCreatedAt());   // unnecessary bt keep for when you wanna add to responseDto
+
                     return sr;
                 }))
                 .flatMap(o -> AppUtils.buildAppResponse(o, "Score Created Successfully"));
