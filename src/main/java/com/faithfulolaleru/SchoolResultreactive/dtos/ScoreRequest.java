@@ -11,8 +11,8 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class ScoreRequest {
 
-    @NotBlank(message = "studentId is required")
-    private Integer studentId;
+//    @NotBlank(message = "studentId is required")
+//    private Integer studentId;
 
     @NotBlank(message = "term is required")
     private int term;

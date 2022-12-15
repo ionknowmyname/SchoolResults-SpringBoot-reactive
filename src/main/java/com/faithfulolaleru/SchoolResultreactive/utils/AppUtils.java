@@ -1,7 +1,9 @@
 package com.faithfulolaleru.SchoolResultreactive.utils;
 
+import com.faithfulolaleru.SchoolResultreactive.dtos.ScoreResponse;
 import com.faithfulolaleru.SchoolResultreactive.dtos.StudentRequest;
 import com.faithfulolaleru.SchoolResultreactive.dtos.StudentResponse;
+import com.faithfulolaleru.SchoolResultreactive.models.Score;
 import com.faithfulolaleru.SchoolResultreactive.models.Student;
 import com.faithfulolaleru.SchoolResultreactive.repositories.StudentRepository;
 import com.faithfulolaleru.SchoolResultreactive.response.AppResponse;
@@ -34,6 +36,13 @@ public class AppUtils {
                 .createdAt(student.getCreatedAt()).build();
     }
 
+    public static ScoreResponse entityToDto(Score score) {
+        ScoreResponse response = new ScoreResponse();
+        BeanUtils.copyProperties(score, response);
+
+        return response;
+    }
+
     public static Student dtoToEntity(StudentRequest request) {
         Student student = new Student();
         BeanUtils.copyProperties(request, student);
@@ -50,7 +59,7 @@ public class AppUtils {
                 .build());
     }
 
-    public static Mono<AppResponse> buildAppResponse(String message) {   // Object can also be List
+    public static Mono<AppResponse> buildAppResponse(String message) {
         return Mono.just(AppResponse.builder()
                 .statusCode("200")
                 .httpStatus(HttpStatus.OK)

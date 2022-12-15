@@ -3,6 +3,7 @@ package com.faithfulolaleru.SchoolResultreactive.handler;
 import com.faithfulolaleru.SchoolResultreactive.dtos.StudentRequest;
 import com.faithfulolaleru.SchoolResultreactive.dtos.StudentResponse;
 import com.faithfulolaleru.SchoolResultreactive.exception.GeneralException;
+import com.faithfulolaleru.SchoolResultreactive.exception.NotFoundException;
 import com.faithfulolaleru.SchoolResultreactive.models.Student;
 import com.faithfulolaleru.SchoolResultreactive.repositories.StudentRepository;
 import com.faithfulolaleru.SchoolResultreactive.response.AppResponse;
@@ -42,19 +43,17 @@ public record StudentHandler(StudentRepository studentRepository) {
         Mono<AppResponse> byId = studentRepository.findById(id)
                 .map(AppUtils::entityToDto)
                 .flatMap(o -> AppUtils.buildAppResponse(o, "Successful"))
-                .switchIfEmpty(Mono.error(new GeneralException(HttpStatus.NOT_FOUND,
-                        "Student with id not found")));
+                .switchIfEmpty(Mono.error(new NotFoundException("Student with id not found")));
 
 
 //                .onErrorResume(e -> Mono.error(new GeneralException(HttpStatus.NOT_FOUND,
 //                        ErrorResponse.ERROR_STUDENT_NOT_EXIST,
 //                        "Student with id not found")));  // , GeneralException.class
 
-        Mono<ServerResponse> notFound = ServerResponse.notFound().build();
+        // Mono<ServerResponse> notFound = ServerResponse.notFound().build();
 
-        return ServerResponse.ok().body(byId, StudentResponse.class)
-               .switchIfEmpty(notFound);
-        // or do custom error for not found with General exception
+        return ServerResponse.ok().body(byId, StudentResponse.class);
+               // .switchIfEmpty(notFound);
     }
 
     public Mono<ServerResponse> createStudent(ServerRequest request) {
@@ -68,7 +67,7 @@ public record StudentHandler(StudentRepository studentRepository) {
                                 .studentClass(req.getStudentClass())
                                 .build())))
                 .flatMap(studentMono -> studentMono.map(s -> AppUtils.entityToDto2(s)))
-                .flatMap(o -> AppUtils.buildAppResponse(o, "Created Successfully"));  // update to return createdAt
+                .flatMap(o -> AppUtils.buildAppResponse(o, "User Created Successfully"));  // update to return createdAt
 
         return ServerResponse.ok().body(responseMono, StudentResponse.class);
     }

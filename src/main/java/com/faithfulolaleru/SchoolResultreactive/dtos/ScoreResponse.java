@@ -21,5 +21,5 @@ public class ScoreResponse {
     private Integer subject5Score;
     private Integer subject6Score;
     private Instant createdAt;
-    private String message;
+    // private String message;
 }

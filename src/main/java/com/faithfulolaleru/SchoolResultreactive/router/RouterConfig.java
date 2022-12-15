@@ -1,5 +1,6 @@
 package com.faithfulolaleru.SchoolResultreactive.router;
 
+import com.faithfulolaleru.SchoolResultreactive.handler.ScoreHandler;
 import com.faithfulolaleru.SchoolResultreactive.handler.StudentHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,9 +11,11 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
 @AllArgsConstructor
-public class StudentRouterConfig {
+public class RouterConfig {
 
     private final StudentHandler studentHandler;
+
+    private final ScoreHandler scoreHandler;
 
     @Bean
     public RouterFunction<ServerResponse> routerFunction() {
@@ -21,6 +24,9 @@ public class StudentRouterConfig {
                 .GET("/api/students/", studentHandler::getAllStudents)
                 .GET("/api/students/{id}", studentHandler::getStudentById)
                 .POST("/api/students/new", studentHandler::createStudent)
+                .POST("/api/scores/{studentId}/new", scoreHandler::createScoreForStudent)
+                .PUT("/api/scores/{studentId}/update", scoreHandler::updateScoreForStudent)
+                .GET("/api/scores/{studentId}/", scoreHandler::getAllScoresByStudentId)
                 .build();
     }
 }
