@@ -22,8 +22,8 @@ public class RouterConfig {
 
         return RouterFunctions.route()
                 .GET("/api/students", studentHandler::getAllStudents)
-                .GET("/api/students/{studentClass}", studentHandler::getAllStudentsByStudentClass)
-                .GET("/api/students/{id}", studentHandler::getStudentById)
+                .GET("/api/students/class/{studentClass}", studentHandler::getAllStudentsByStudentClass)
+                .GET("/api/students/id/{id}", studentHandler::getStudentById)
                 .POST("/api/students/new", studentHandler::createStudent)
                 .POST("/api/scores/{studentId}/new", scoreHandler::createScoreForStudent)
                 .PUT("/api/scores/{studentId}/update", scoreHandler::updateScoreForStudent)
