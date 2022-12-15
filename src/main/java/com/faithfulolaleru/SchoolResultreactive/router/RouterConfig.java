@@ -28,6 +28,7 @@ public class RouterConfig {
                 .POST("/api/scores/{studentId}/new", scoreHandler::createScoreForStudent)
                 .PUT("/api/scores/{studentId}/update", scoreHandler::updateScoreForStudent)
                 .GET("/api/scores/{studentId}", scoreHandler::getAllScoresByStudentId)
+                .DELETE("/api/scores/{studentId}/{term}", scoreHandler::deleteScoreByStudentIdAndTerm)
                 .build();
     }
 }

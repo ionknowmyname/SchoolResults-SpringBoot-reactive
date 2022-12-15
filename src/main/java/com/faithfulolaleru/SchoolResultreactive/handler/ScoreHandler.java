@@ -3,6 +3,7 @@ package com.faithfulolaleru.SchoolResultreactive.handler;
 import com.faithfulolaleru.SchoolResultreactive.dtos.ScoreRequest;
 import com.faithfulolaleru.SchoolResultreactive.dtos.ScoreResponse;
 import com.faithfulolaleru.SchoolResultreactive.exception.GeneralException;
+import com.faithfulolaleru.SchoolResultreactive.exception.NotFoundException;
 import com.faithfulolaleru.SchoolResultreactive.handler.service.StudentService;
 import com.faithfulolaleru.SchoolResultreactive.models.Score;
 import com.faithfulolaleru.SchoolResultreactive.repositories.ScoreRepository;
@@ -72,6 +73,20 @@ public record ScoreHandler(ScoreRepository scoreRepository, StudentService stude
                 .switchIfEmpty(Mono.empty());
 
         return ServerResponse.ok().body(response, AppResponse.class);
+    }
+
+    public Mono<ServerResponse> deleteScoreByStudentIdAndTerm(ServerRequest request) {
+
+        Integer studentId = Integer.valueOf(request.pathVariable("studentId"));
+        Integer term = Integer.valueOf(request.pathVariable("term"));
+
+        Mono<AppResponse> deleted = scoreRepository.findByStudentIdAndTerm(studentId, term)
+                .flatMap(score -> scoreRepository.delete(score).thenReturn(score))
+                .map(score -> AppUtils.entityToDto(score))
+                .flatMap(o -> AppUtils.buildAppResponse(o, "Deleted Score Successfully"))
+                .switchIfEmpty(Mono.error(new NotFoundException("Selected Student has no score for selected term")));
+
+        return ServerResponse.ok().body(deleted, AppResponse.class);
     }
 
     private Score throwErrorIfExist(Score score) {
