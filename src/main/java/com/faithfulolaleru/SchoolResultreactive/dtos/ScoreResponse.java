@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 public class ScoreResponse {
 
     private String id;
-    private Integer studentId;
+    private String studentId;
     private int term;
     private Integer subject1Score;
     private Integer subject2Score;

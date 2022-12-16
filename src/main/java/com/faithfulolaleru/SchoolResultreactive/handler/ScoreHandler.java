@@ -10,6 +10,7 @@ import com.faithfulolaleru.SchoolResultreactive.repositories.ScoreRepository;
 import com.faithfulolaleru.SchoolResultreactive.response.AppResponse;
 import com.faithfulolaleru.SchoolResultreactive.utils.AppUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -21,7 +22,8 @@ import java.time.LocalDateTime;
 
 @Component
 @Slf4j
-public record ScoreHandler(ScoreRepository scoreRepository, StudentService studentService) {
+public record ScoreHandler(ScoreRepository scoreRepository, StudentService studentService,
+                           ModelMapper modelMapper) {
     public Mono<ServerResponse> createScoreForStudent(ServerRequest request) {
 
         String studentId = request.pathVariable("studentId");
@@ -32,12 +34,7 @@ public record ScoreHandler(ScoreRepository scoreRepository, StudentService stude
                         .flatMap(student -> scoreRepository.findByStudentIdAndTerm(student.getId(), req.getTerm())
                                 .map(score -> throwErrorIfExist(score))
                                 .switchIfEmpty(scoreRepository.save(scoreBuilder(req, studentId)))))
-                .flatMap(scoreMono -> scoreMono.map(s -> {
-                    ScoreResponse sr = AppUtils.entityToDto(s);
-                    sr.setCreatedAt(s.getCreatedAt());   // unnecessary bt keep for when you wanna add to responseDto
-
-                    return sr;
-                }))
+                .flatMap(scoreMono -> scoreMono.map(s -> modelMapper.map(s, ScoreResponse.class)))
                 .flatMap(o -> AppUtils.buildAppResponse(o, "Score Created Successfully"));
 
         return ServerResponse.ok().body(responseMono, ScoreResponse.class);

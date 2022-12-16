@@ -8,6 +8,7 @@ import com.faithfulolaleru.SchoolResultreactive.models.Student;
 import com.faithfulolaleru.SchoolResultreactive.repositories.StudentRepository;
 import com.faithfulolaleru.SchoolResultreactive.response.AppResponse;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,8 @@ import javax.validation.constraints.NotNull;
 public class AppUtils {
 
     private final StudentRepository studentRepository;
+
+    private static final ModelMapper modelMapper = new ModelMapper();
 
     public static StudentResponse entityToDto(Student student) {
         StudentResponse response = new StudentResponse();
@@ -39,6 +42,12 @@ public class AppUtils {
     public static ScoreResponse entityToDto(Score score) {
         ScoreResponse response = new ScoreResponse();
         BeanUtils.copyProperties(score, response);
+
+        return response;
+    }
+
+    public static ScoreResponse entityToDto2(Score score) {
+        ScoreResponse response = modelMapper.map(score, ScoreResponse.class);
 
         return response;
     }
