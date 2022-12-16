@@ -53,7 +53,7 @@ public record StudentHandler(StudentRepository studentRepository) {
     }
 
     public Mono<ServerResponse> getStudentById(ServerRequest request) {
-        Integer id = Integer.valueOf(request.pathVariable("id"));
+        String id = request.pathVariable("id");
 
         Mono<AppResponse> byId = studentRepository.findById(id)
                 .map(AppUtils::entityToDto)
@@ -113,7 +113,7 @@ public record StudentHandler(StudentRepository studentRepository) {
                 .build());
     }
 
-    public Mono<Student> findStudentByStudentId(Integer id) {
+    public Mono<Student> findStudentByStudentId(String id) {
         return studentRepository.findById(id)
                 .switchIfEmpty(Mono.error(new GeneralException(HttpStatus.NOT_FOUND,
                         "Student with id doesn't exist")));

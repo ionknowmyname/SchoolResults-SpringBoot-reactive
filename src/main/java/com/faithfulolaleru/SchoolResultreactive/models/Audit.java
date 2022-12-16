@@ -10,7 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 //import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.relational.core.mapping.Column;
+
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -24,26 +24,25 @@ import java.time.OffsetDateTime;
         allowGetters = true
 )
 @AllArgsConstructor
-// @NoArgsConstructor
+@NoArgsConstructor
 @Data
 public class Audit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
-    @Column("created_at")
+
 //    @CreationTimestamp
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column("updated_at")
+
 //    @UpdateTimestamp
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
 
-    public Audit() {
-        this.createdAt = LocalDateTime.now();
-    }
+//    public Audit() {
+//        this.createdAt = LocalDateTime.now();
+//    }
 }
