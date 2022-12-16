@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 public class ScoreResponse {
 
-    private Integer id;
+    private String id;
     private Integer studentId;
     private int term;
     private Integer subject1Score;

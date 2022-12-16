@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 public record ScoreHandler(ScoreRepository scoreRepository, StudentService studentService) {
     public Mono<ServerResponse> createScoreForStudent(ServerRequest request) {
 
-        Integer studentId = Integer.valueOf(request.pathVariable("studentId"));
+        String studentId = request.pathVariable("studentId");
         Mono<ScoreRequest> scoreRequestMono = request.bodyToMono(ScoreRequest.class);
 
         Mono<AppResponse> responseMono = scoreRequestMono
@@ -45,7 +45,7 @@ public record ScoreHandler(ScoreRepository scoreRepository, StudentService stude
 
     public Mono<ServerResponse> updateScoreForStudent(ServerRequest request) {
 
-        Integer studentId = Integer.valueOf(request.pathVariable("studentId"));
+        String studentId = request.pathVariable("studentId");
         Mono<ScoreRequest> scoreRequestMono = request.bodyToMono(ScoreRequest.class);
 
         Mono<AppResponse> responseMono = scoreRequestMono
@@ -64,7 +64,7 @@ public record ScoreHandler(ScoreRepository scoreRepository, StudentService stude
 
     public Mono<ServerResponse> getAllScoresByStudentId(ServerRequest request) {
 
-        Integer studentId = Integer.valueOf(request.pathVariable("studentId"));
+        String studentId = request.pathVariable("studentId");
 
         Mono<AppResponse> response = scoreRepository.findAllByStudentId(studentId)
                 .map(AppUtils::entityToDto)
@@ -77,7 +77,7 @@ public record ScoreHandler(ScoreRepository scoreRepository, StudentService stude
 
     public Mono<ServerResponse> deleteScoreByStudentIdAndTerm(ServerRequest request) {
 
-        Integer studentId = Integer.valueOf(request.pathVariable("studentId"));
+        String studentId = request.pathVariable("studentId");
         Integer term = Integer.valueOf(request.pathVariable("term"));
 
         Mono<AppResponse> deleted = scoreRepository.findByStudentIdAndTerm(studentId, term)
@@ -94,7 +94,7 @@ public record ScoreHandler(ScoreRepository scoreRepository, StudentService stude
         throw new GeneralException(HttpStatus.CONFLICT, message);
     }
 
-    private Score scoreBuilder(ScoreRequest req, Integer studentId) {
+    private Score scoreBuilder(ScoreRequest req, String studentId) {
         return Score.builder()
                 .studentId(studentId)
                 .term(req.getTerm())

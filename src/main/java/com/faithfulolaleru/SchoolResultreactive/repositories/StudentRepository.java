@@ -6,7 +6,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
-public interface StudentRepository extends ReactiveCrudRepository<Student, Integer> {
+public interface StudentRepository extends ReactiveCrudRepository<Student, String> {
 
     Mono<Student> findStudentByName(String name);
 

@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 @Component
 public record StudentService(StudentRepository studentRepository) {
 
-    public Mono<Student> findStudentById(Integer id) {
+    public Mono<Student> findStudentById(String id) {
         Mono<Student> student = studentRepository.findById(id)
                 .switchIfEmpty(Mono.error(new GeneralException(HttpStatus.NOT_FOUND,
                         "Student with id doesn't exist")));
@@ -19,7 +19,7 @@ public record StudentService(StudentRepository studentRepository) {
         return student;
     }
 
-    public Mono<Boolean> isStudentExist(Integer id) {
+    public Mono<Boolean> isStudentExist(String id) {
         return studentRepository.existsById(id);
     }
 }

@@ -15,7 +15,7 @@ import java.time.OffsetDateTime;
 @Builder
 public class StudentResponse {
 
-    private Integer id;
+    private String id;
     private String name;
     private String studentClass;
     private LocalDateTime createdAt;

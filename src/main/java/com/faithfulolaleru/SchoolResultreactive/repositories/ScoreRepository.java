@@ -6,9 +6,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
-public interface ScoreRepository extends ReactiveCrudRepository<Score, Integer> {
+public interface ScoreRepository extends ReactiveCrudRepository<Score, String> {
 
-    Mono<Score> findByStudentIdAndTerm(Integer studentId, int term);
+    Mono<Score> findByStudentIdAndTerm(String studentId, int term);
 
-    Flux<Score> findAllByStudentId(Integer studentId);
+    Flux<Score> findAllByStudentId(String studentId);
 }
